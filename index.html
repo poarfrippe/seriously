@@ -1,2 +1,221 @@
-This is a page, yes, but it's not particularly impressive. <br>
-But give me some time :+)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Wall</title>
+<style>
+  :root {
+    color-scheme: light;
+    --wall: #f3e7b0;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+
+  /* THE WALL
+     1. light falloff and corner shading (like a lit room)
+     2. big soft stains in the paint
+     3. fine speckle
+     4. real plaster relief, lit from the top left
+  */
+  body {
+    background-color: var(--wall);
+    background-image:
+      radial-gradient(ellipse at 30% 0%, rgba(255,255,235,.55), transparent 60%),
+      radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(120,90,20,.28) 110%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900'><filter id='m' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.004 .006' numOctaves='4' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .4  0 0 0 0 .1  1.4 0 0 0 -.45'/></filter><rect width='100%' height='100%' filter='url(%23m)' opacity='.55'/></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='s' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='11' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 .08  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23s)'/></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='480'><filter id='p' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.03' numOctaves='5' seed='7' stitchTiles='stitch' result='n'/><feDiffuseLighting in='n' surfaceScale='3.2' diffuseConstant='1' lighting-color='%23fff0b0'><feDistantLight azimuth='225' elevation='72'/></feDiffuseLighting></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+    background-attachment: fixed, fixed, scroll, scroll, scroll;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #5a4a1c;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(36px, 7vw, 90px) clamp(14px, 4vw, 40px) clamp(48px, 8vw, 110px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(26px, 5vw, 68px) clamp(18px, 4vw, 56px);
+  }
+
+  /* --w = width on desktop in px. On small screens it scales with the viewport.
+     --fw = thickness of the frame moulding, scaled with the frame. */
+  figure {
+    --w: 280;
+    --fw: calc(var(--w) * .085px);
+    --bead: calc(var(--fw) * .36);
+    margin: 0;
+    width: calc(var(--w) * 1px);
+    max-width: 100%;
+    position: relative;
+  }
+
+  @media (max-width: 700px) {
+    figure {
+      width: calc(var(--w) * .155vw);
+      --fw: calc(var(--w) * .0132vw);
+    }
+  }
+
+  /* nail */
+  figure::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--fw) * -1 - 12px); left: 50%;
+    width: 7px; height: 7px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff6c8, #a07a22 60%, #5a4210);
+    box-shadow: 1px 2px 2px rgba(60,40,0,.45);
+  }
+
+  /* THE ANTIQUE FRAME
+     Mitred moulding: the four border colours meet in diagonal joints,
+     like four separate lengths of carved gilt wood. */
+  .frame {
+    position: relative;
+    margin: var(--fw);
+    border: var(--fw) solid;
+    border-color: #f1d36e #9a6f1a #6e4a0c #c99a35;
+    background: #5b3d08;
+    box-shadow:
+      /* gilt liner lines, just inside the moulding */
+      inset 0 0 0 2px #7a5512,
+      inset 0 0 0 4px #f4dc85,
+      inset 0 0 0 6px #a67a22,
+      inset 0 0 0 8px #4a3206,
+      inset 0 0 14px 8px rgba(40,25,0,.55),
+      /* dark outer edge */
+      0 0 0 1px #4a3206,
+      0 0 0 3px #c9a13a,
+      0 0 0 4px #5b3d08,
+      /* shadow thrown onto the wall (light from top left) */
+      3px 4px 4px rgba(70,50,0,.4),
+      12px 20px 26px -6px rgba(80,60,10,.45),
+      26px 44px 56px -26px rgba(80,60,10,.35);
+  }
+
+  /* pearl beading along the middle of the moulding */
+  .frame::before {
+    --o: calc(var(--fw) * -.5 - var(--bead) / 2);
+    content: "";
+    position: absolute;
+    inset: var(--o);
+    pointer-events: none;
+    --d: radial-gradient(circle at 38% 34%, #fffbe0 0 14%, #f0cf68 30%, #a67a22 58%, #4a3206 72%, transparent 76%);
+    background:
+      var(--d) 0 0 / var(--bead) var(--bead) repeat-x,
+      var(--d) 0 100% / var(--bead) var(--bead) repeat-x,
+      var(--d) 0 0 / var(--bead) var(--bead) repeat-y,
+      var(--d) 100% 0 / var(--bead) var(--bead) repeat-y;
+  }
+
+  /* aged gilding: darkened crevices, worn patches and a little sheen,
+     painted only on the moulding (the middle is masked out) */
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--fw) * -1);
+    padding: var(--fw);
+    pointer-events: none;
+    background:
+      linear-gradient(115deg, rgba(255,250,200,.45) 0%, transparent 28%, transparent 62%, rgba(40,20,0,.35) 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='a' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .22  0 0 0 0 .12  0 0 0 0 .0  0 0 0 1.9 -.78'/></filter><rect width='100%' height='100%' filter='url(%23a)'/></svg>");
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  /* cream mat with a bevelled opening and a gilt fillet */
+  .mat {
+    padding: calc(var(--fw) * .8);
+    background: #f4eddb;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.1), inset 0 3px 10px rgba(0,0,0,.35);
+  }
+
+  .mat img {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--r, 4 / 3);
+    object-fit: cover;
+    outline: 2px solid #c79c33;
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 1px #5b3d08,
+      0 0 0 5px #fffaea,
+      0 0 0 6px rgba(0,0,0,.18),
+      inset 0 0 14px rgba(0,0,0,.35);
+  }
+
+  figcaption {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <!--
+    HOW TO USE
+    1. Put your photos in the same folder, e.g. photos/beach.jpg
+    2. Replace each src="data:..." below with your own file: src="photos/beach.jpg"
+    3. --w   = frame width in px on desktop (try 180 to 420)
+       --r   = picture shape: 4 / 3 landscape, 3 / 4 portrait, 1 / 1 square
+    4. Copy a whole <figure>...</figure> block to add another picture.
+  -->
+
+  <figure style="--w:340; --r:4 / 3">
+    <div class="frame"><div class="mat">
+      <img alt="Sunrise over hills" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23f2a65a'/><stop offset='1' stop-color='%23fdebd0'/></linearGradient></defs><rect width='400' height='300' fill='url(%23g)'/><circle cx='290' cy='110' r='38' fill='%23fff6dc'/><path d='M0 230 L110 150 L210 215 L300 165 L400 235 V300 H0Z' fill='%236b5b7b'/><path d='M0 260 L140 210 L260 255 L400 215 V300 H0Z' fill='%23413a5a'/></svg>">
+    </div></div>
+    <figcaption>Sunrise over hills</figcaption>
+  </figure>
+
+  <figure style="--w:220; --r:3 / 4">
+    <div class="frame"><div class="mat">
+      <img alt="Blue lake" src="/seriousMedia/graduation.jpg">
+    </div></div>
+    <figcaption>Graduation TU Wien</figcaption>
+  </figure>
+
+  <figure style="--w:260; --r:1 / 1">
+    <div class="frame"><div class="mat">
+      <img alt="Green field" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='xMidYMid slice'><rect width='300' height='300' fill='%23d9ecf5'/><circle cx='70' cy='70' r='28' fill='%23fff3b0'/><path d='M0 170 Q80 120 160 165 T300 150 V300 H0Z' fill='%2397c26a'/><path d='M0 220 Q100 180 200 225 T300 210 V300 H0Z' fill='%23679a45'/></svg>">
+    </div></div>
+    <figcaption>Green field</figcaption>
+  </figure>
+
+  <figure style="--w:300; --r:5 / 4">
+    <div class="frame"><div class="mat">
+      <img alt="Evening sky" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 320' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23352b5e'/><stop offset='.7' stop-color='%23d46a7a'/><stop offset='1' stop-color='%23f7b27a'/></linearGradient></defs><rect width='400' height='320' fill='url(%23g)'/><circle cx='120' cy='95' r='2' fill='%23fff'/><circle cx='220' cy='60' r='2' fill='%23fff'/><circle cx='320' cy='110' r='2' fill='%23fff'/><path d='M0 270 L60 235 L100 255 L170 215 L250 260 L330 225 L400 262 V320 H0Z' fill='%231f1a3a'/></svg>">
+    </div></div>
+    <figcaption>Evening sky</figcaption>
+  </figure>
+
+  <figure style="--w:200; --r:3 / 4">
+    <div class="frame"><div class="mat">
+      <img alt="Red flower" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400' preserveAspectRatio='xMidYMid slice'><rect width='300' height='400' fill='%23f3ead4'/><path d='M150 400 V230' stroke='%23567a3a' stroke-width='8'/><path d='M150 330 Q100 300 90 260 Q135 270 150 330Z M150 300 Q200 270 210 230 Q165 240 150 300Z' fill='%23679a45'/><g fill='%23c8433f'><circle cx='150' cy='170' r='34'/><circle cx='110' cy='200' r='34'/><circle cx='190' cy='200' r='34'/><circle cx='120' cy='145' r='34'/><circle cx='180' cy='145' r='34'/></g><circle cx='150' cy='175' r='22' fill='%23f2c14e'/></svg>">
+    </div></div>
+    <figcaption>Red flower</figcaption>
+  </figure>
+
+  <figure style="--w:380; --r:16 / 9">
+    <div class="frame"><div class="mat">
+      <img alt="Desert dunes" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 270' preserveAspectRatio='xMidYMid slice'><rect width='480' height='270' fill='%23f9dfae'/><circle cx='380' cy='60' r='26' fill='%23fff3cf'/><path d='M0 170 Q120 100 240 165 T480 140 V270 H0Z' fill='%23e3a95c'/><path d='M0 220 Q140 170 280 225 T480 200 V270 H0Z' fill='%23c9843c'/></svg>">
+    </div></div>
+    <figcaption>Desert dunes</figcaption>
+  </figure>
+
+</main>
+</body>
+</html>
